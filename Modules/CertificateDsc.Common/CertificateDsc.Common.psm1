@@ -620,6 +620,7 @@ function Test-Thumbprint
             $validHash = New-Object `
                 -TypeName PSObject `
                 -Property @{
+                Name      = $hashProvider.Name
                 Hash      = $hashProvider.BaseType.Name
                 BitSize   = $bitSize
                 HexLength = $bitSize / 4
@@ -638,9 +639,16 @@ function Test-Thumbprint
             {
                 if ($hash -cmatch "^[a-fA-F0-9]{$($algorithm.HexLength)}$")
                 {
+                    Write-Verbose -Message "Hash '$($hash)' matches '$($algorithm.Name)' HexLength of $($algorithm.HexLength)."
                     $isValid = $true
                 }
+                else
+                {
+                    Write-Verbose -Message "Hash '$($hash)' does not match '$($algorithm.Name)' HexLength of $($algorithm.HexLength)."
+				}
             }
+
+            Write-Verbose -Message "Hash '$($hash)' is valid: $($isValid.ToString())"
 
             if ($Quiet -or $isValid)
             {
